@@ -13,11 +13,11 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout Code
+    - name: Checkout code
       uses: actions/checkout@v3
       with:
-        fetch-deep: 0
-
+        fetch-depth: 0
+    
     - name: Git Semantic Version
       uses: PaulHatch/semantic-version@v4.0.3
       with:
@@ -25,31 +25,36 @@ jobs:
         minor_pattern: "feat:"
         format: "${major}.${minor}.${patch}-prerelease${increment}"
       id: version
-
-    - name: Docker login
+    
+    - name: Docker Login
       env:
         DOCKER_USER: ${{ secrets.DOCKER_USER }}
         DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+        
       run: |
         docker login -u $DOCKER_USER -p $DOCKER_PASSWORD
-
-    - name: Build Docker image
+        
+    - name: Build Docker Image
       env:
         NEW_VERSION: ${{ steps.version.outputs.version }}
       run: |
         docker build -t jordyf3l/docker-graphql:$NEW_VERSION .
-        docker build -t jordyf3l/docker-graphql .
-
-    - name: Push Docker image
+        docker build -t jordyf3l/docker-graphql:latest .
+        
+    - name: Push Docker Image
       env:
         NEW_VERSION: ${{ steps.version.outputs.version }}
       run: |
         docker push jordyf3l/docker-graphql:$NEW_VERSION
-        docker push jordyf3l/docker-graphql
-      
+        docker push jordyf3l/docker-graphql:latest
       
     
-
     
-    # - name: Build the Docker image
-    #   run: docker build . --file Dockerfile --tag my-image-name:$(date +%s)
+    
+    
+    
+    
+    
+    
+#     - name: Build the Docker image
+#       run: docker build . --file Dockerfile --tag my-image-name:$(date +%s)
