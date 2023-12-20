@@ -28,6 +28,7 @@ jobs:
     - name: Build Docker image
       run: |
         docker build -t jordyf3l/docker-graphql:0.0.2 .
+        docker build -t jordyf3l/docker-graphql .
 
     - name: Push Docker image
       run: |
